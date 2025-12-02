@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Server Benchmark Results</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            width: 100%;
+            margin-bottom: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>High-Performance Server Benchmarks</h1>
+
+    <div class="chart-container">
+        <canvas id="rpsChart"></canvas>
+    </div>
+    <div class="chart-container">
+        <canvas id="latencyChart"></canvas>
+    </div>
+
+    <script>
+        // Data from benchmark_results.csv
+        const data = [
+            { concurrency: 10, rps: 49724.20, latency: 0.20 },
+            { concurrency: 50, rps: 57647.20, latency: 0.87 },
+            { concurrency: 100, rps: 58083.40, latency: 1.72 },
+            { concurrency: 200, rps: 56553.80, latency: 3.54 },
+            { concurrency: 500, rps: 56983.60, latency: 8.78 }
+        ];
+
+        const concurrencies = data.map(d => d.concurrency);
+        const rps = data.map(d => d.rps);
+        const latencies = data.map(d => d.latency);
+
+        // RPS Chart
+        new Chart(document.getElementById('rpsChart'), {
+            type: 'line',
+            data: {
+                labels: concurrencies,
+                datasets: [{
+                    label: 'Requests Per Second (RPS)',
+                    data: rps,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1,
+                    yAxisID: 'y'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Concurrency' } },
+                    y: { title: { display: true, text: 'RPS' }, beginAtZero: true }
+                }
+            }
+        });
+
+        // Latency Chart
+        new Chart(document.getElementById('latencyChart'), {
+            type: 'line',
+            data: {
+                labels: concurrencies,
+                datasets: [{
+                    label: 'Avg Latency (ms)',
+                    data: latencies,
+                    borderColor: 'rgb(255, 99, 132)',
+                    tension: 0.1,
+                    yAxisID: 'y'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: 'Concurrency' } },
+                    y: { title: { display: true, text: 'Latency (ms)' }, beginAtZero: true }
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
